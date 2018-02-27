@@ -9,7 +9,7 @@ function renderStories(){
         arrayOfData = [].concat(val.data);
         
         for(var i =0; i<10; i++){
-            createAndAppendItem(arrayOfData[i]);
+            createAndAppendItem(arrayOfData[i], "#posts");
         }
         console.log(arrayOfData);
     })
@@ -17,7 +17,7 @@ function renderStories(){
 
 renderStories();
 
-function createAndAppendItem(obj){
+function createAndAppendItem(obj, target){
     let $post = $("<li>");
      $post.attr("id", obj.storyId);
 
@@ -44,7 +44,7 @@ function createAndAppendItem(obj){
 
      $post.append($star).append($titleText).append($author).append($url);
      
-     $("#posts").append($post);
+     $(target).append($post);
      
 
 
@@ -191,9 +191,45 @@ $form.on("submit", function(){
 
 
 $list.on("click", "i", function(event){
-    $(event.target).toggleClass("far fa-star fas fa-star");
     
-});
+    let $storyId = $(event.target).parent().attr("id");
+    let $username = JSON.parse(atob(localStorage.token.split(".")[1])).username;
+    
+
+
+
+    if($(event.target).hasClass("fas")){
+        $.ajax({
+            headers:{
+                Authorization: "Bearer " + localStorage.token
+            },
+            data:{
+                data:{
+                    username: $username
+                }
+            },
+            method:"DELETE",
+            url:"https://hack-or-snooze.herokuapp.com/users/" + $username+ "/favorites/" + $storyId
+        }).then(function(val){
+            $(event.target).toggleClass("fas");
+        })
+    }else{
+        $.ajax({
+            headers:{
+                Authorization: "Bearer " + localStorage.token
+            },
+            data:{
+                data:{
+                    username: $username
+                }
+            },
+            method:"POST",
+            url:"https://hack-or-snooze.herokuapp.com/users/" + $username+ "/favorites/" + $storyId
+        }).then(function(val){
+            $(event.target).toggleClass("fas");
+        })
+    }
+})
 
 
 $submit.on("click", function(){
@@ -204,12 +240,34 @@ $submit.on("click", function(){
 });
 
 $favorites.on("click", function(){
-    if($all.text() === "Favorites"){
-        $all.text("All");
-        $(".far").parent().hide();
-    }else{
-        $all.text("Favorites");
-        $(".far").parent().show();
-    }
+    let $arrayOfData=[];
+    let $username = JSON.parse(atob(localStorage.token.split(".")[1])).username;
+    let $storyForm = $("#submit-story-form");
+    let $listOfStories = $("#posts");
+    $storyForm.fadeOut();
+    $listOfStories.fadeOut();
+   
+    $.ajax({
+        method: "GET",
+        url: "https://hack-or-snooze.herokuapp.com/users/" + $username,
+        headers: {
+            Authorization: "Bearer " + localStorage.token
+        }
+    }).then(function(val) {
+        $arrayOfData = [].concat(val.data.favorites);
+        
+        for(var i =0; i<10; i++){
+            createAndAppendItem($arrayOfData[i], "#favorite-stories");
+        }
+        $("#favorite-stories").fadeIn();
+    })
+
+    // if($all.text() === "Favorites"){
+    //     $all.text("All");
+    //     $(".far").parent().hide();
+    // }else{
+    //     $all.text("Favorites");
+    //     $(".far").parent().show();
+    // }
     
 });

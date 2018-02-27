@@ -76,3 +76,7 @@ span{
 #submit-story-form{
     display:block;
 }
+
+#favorite-stories{
+    display:hidden;
+}
