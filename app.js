@@ -122,20 +122,20 @@ $form.on("submit", function(){
     let $title = $("#title").val();
     let $story = $("#story-text").val();
     let $link = $("#link").val();
-    let $AuthToken = "Bearer " + localStorage.token;
-    console.log($AuthToken)
+    let $username = JSON.parse(atob(localStorage.token.split(".")[1])).username;
+    
     $.ajax({
         headers:{
-         Authorization:$AuthToken //"Bearer " + localStorage.token
+         Authorization:"Bearer " + localStorage.token
     },
         method: "POST",
         url: "https://hack-or-snooze.herokuapp.com/stories",
         data: {
             data: {
                 title: $title,
-                author: localStorage.username,
+                author: $username,
                 url: $link,
-                username: localStorage.username,
+                username: $username,
                 
             }
         }
@@ -314,3 +314,29 @@ $("#my-stories-btn").on("click", function(){
     }
 });
 
+$("#my-stories").on("click", "li", function(event) {
+    if($(event.target).attr("id")) {
+        var $elementToDelete = $(event.target);
+    } else {
+        var $elementToDelete = $(event.target).parent();
+    }
+    let $storyId = $elementToDelete.attr("id");
+    let $username = JSON.parse(atob(localStorage.token.split(".")[1])).username;
+    console.log($elementToDelete);
+
+    $.ajax({
+        headers:{
+         Authorization:"Bearer " + localStorage.token
+    },
+        method: "DELETE",
+        url: "https://hack-or-snooze.herokuapp.com/stories/" + $storyId,
+        data: {
+            data: {
+                username: $username,
+                storyId: $storyId,
+            }
+        }
+    }).then(function(val) {
+        $elementToDelete.fadeOut();
+    })
+});
