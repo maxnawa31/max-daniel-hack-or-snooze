@@ -34,7 +34,7 @@ span{
 .larger-text{
     font-size:15px;
 }
-#posts{
+#posts, ul {
     padding-top:20px;
 }
 
