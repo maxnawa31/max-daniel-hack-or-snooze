@@ -1,3 +1,79 @@
+var arrayOfData = [];
+$.ajax({
+    method: "GET",
+    url: "https://hack-or-snooze.herokuapp.com/stories",
+    
+}).then(function(val) {
+    arrayOfData = arrayOfData.concat(val.data);
+    for(var i =0; i<10; i++){
+        createAndAppendItem(arrayOfData[i]);
+    }
+    console.log(arrayOfData);
+})
+
+
+function createAndAppendItem(obj){
+    let $post = $("<li>");
+     $post.attr("id", obj.storyId);
+
+     let $star = $("<i>").addClass("far fa-star");
+     $post.append($star);
+     
+     let $titleText = $("<span>");
+     $titleText.addClass("larger-text").text(obj.title);
+    
+
+     let $author = $("<span>");
+
+     if(obj.author){
+        $author.addClass("author-text").text("By: " + obj.author) 
+     }else{
+        $author.addClass("author-text").text("By: anonymous") 
+     }
+     
+     
+     let $url = $("<span>")
+     var parsedLink = getRootUrl(obj.url);
+     $url.text("(" + parsedLink + ")");
+
+
+     $post.append($star).append($titleText).append($author).append($url);
+     
+     $("#posts").append($post);
+     
+
+
+
+    // $post.append($titleText);
+    
+    // $list.append($post.append($url));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 var $title = $("#title");
 var $list = $("#posts")
 var $link = $("#link");
