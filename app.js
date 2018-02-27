@@ -1,5 +1,12 @@
+// Variables
 var arrayOfData = [];
+var $list = $("#posts")
+var $form = $("#submit-story-form");
+var $favorites = $("#favorites");
+var $submit = $("#submit");
+var $all = $("#all");
 
+// Rendrer stories in the main screen
 function renderStories(){
     $.ajax({
         method: "GET",
@@ -15,6 +22,7 @@ function renderStories(){
     })
 }
 
+// Helper function for rendering stories
 renderStories();
 
 function createAndAppendItem(obj, target){
@@ -27,7 +35,6 @@ function createAndAppendItem(obj, target){
      let $titleText = $("<span>");
      $titleText.addClass("larger-text").text(obj.title);
     
-
      let $author = $("<span>");
 
      if(obj.author){
@@ -36,24 +43,18 @@ function createAndAppendItem(obj, target){
         $author.addClass("author-text").text("By: anonymous") 
      }
      
-     
      let $url = $("<span>")
      var parsedLink = getRootUrl(obj.url);
      $url.text("(" + parsedLink + ")");
 
-
      $post.append($star).append($titleText).append($author).append($url);
      
      $(target).append($post);
-     
-
-
-
-    // $post.append($titleText);
-    
-    // $list.append($post.append($url));
 }
 
+////////////////////////////////////////////////////////////
+//SIGNUP -- LOGIN FIELD
+// Functions and eventlisteners related to sign-up or login
 $("#screen-cover").on("click", function() {
     $("#screen-cover").fadeToggle();
     $("#signup-login-field").fadeToggle();
@@ -88,7 +89,6 @@ $("#submit-signup-btn").click(function() {
     $("#signup-login-field").fadeToggle();
 });
 
-
 $("#submit-login-btn").click(function(){
     let $username = $("#username-input").val();
     let $password = $("#password-input").val();
@@ -112,41 +112,13 @@ $("#submit-login-btn").click(function(){
     $("#signup-login-field").fadeToggle();
 })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var $list = $("#posts")
-
-var $form = $("#submit-story-form");
-var $favorites = $("#favorites");
-var $submit = $("#submit");
-var $all = $("#all");
+///////////////////////////////////////////////////////////////
+// SUBMIT STORIES
+// Functions and eventlisteners related to submitting form
 function getRootUrl(url) {
     return url.toString().replace(/^(.*\/\/[^\/?#]*).*$/,"$1");
-  }
-$(document).ready(function(){
-    console.log("hello")
-    $form.hide();   
-})
+}
+
 $form.on("submit", function(){
     let $title = $("#title").val();
     let $story = $("#story-text").val();
@@ -172,31 +144,23 @@ $form.on("submit", function(){
         $list.html("");
         renderStories();
     
-})
     })
+})
 
-    // $title.val();
-    // let $post = $("<li>");
-    // let $star = $("<i>").addClass("far fa-star")
-    // let $titleText = $("<span>");
-    // let $url = $("<span>")
-    // $post.append($star);
-    // $titleText.addClass("larger-text").text($title.val());
-    // $post.append($titleText);
-    // var parsedLink = getRootUrl($link.val())
-    // $url.text("(" + parsedLink + ")");
-    // $list.append($post.append($url));
-    // $form.toggle("hide");
+$submit.on("click", function(){
+    if(localStorage.token){
+        $form.toggle("hide");
+    }
+    
+});
 
-
-
+//////////////////////////////////////////////////////
+// FAVORITES
+// Functions and event listener related to favorites
 $list.on("click", "i", function(event){
     
     let $storyId = $(event.target).parent().attr("id");
     let $username = JSON.parse(atob(localStorage.token.split(".")[1])).username;
-    
-
-
 
     if($(event.target).hasClass("fas")){
         $.ajax({
@@ -231,14 +195,6 @@ $list.on("click", "i", function(event){
     }
 })
 
-
-$submit.on("click", function(){
-    if(localStorage.token){
-        $form.toggle("hide");
-    }
-    
-});
-
 $favorites.on("click", function(){
     let $arrayOfData=[];
     let $username = JSON.parse(atob(localStorage.token.split(".")[1])).username;
@@ -261,13 +217,4 @@ $favorites.on("click", function(){
         }
         $("#favorite-stories").fadeIn();
     })
-
-    // if($all.text() === "Favorites"){
-    //     $all.text("All");
-    //     $(".far").parent().hide();
-    // }else{
-    //     $all.text("Favorites");
-    //     $(".far").parent().show();
-    // }
-    
 });
