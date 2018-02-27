@@ -6,7 +6,8 @@ function renderStories(){
         url: "https://hack-or-snooze.herokuapp.com/stories",
         
     }).then(function(val) {
-        arrayOfData = arrayOfData.concat(val.data);
+        arrayOfData = [].concat(val.data);
+        
         for(var i =0; i<10; i++){
             createAndAppendItem(arrayOfData[i]);
         }
