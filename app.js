@@ -82,14 +82,47 @@ function createAndAppendItem(obj, target){
         $author.addClass("author-text").text("By: anonymous") 
      }
      
-     let $url = $("<span>")
-     var parsedLink = getRootUrl(obj.url);
-     $url.text("(" + parsedLink + ")");
-
-     $post.append($star).append($titleText).append($author).append($url);
+     let $fullUrl = obj.url;
+     let $parsedLink = getRootUrl($fullUrl);
+     let $displayUrl = $parsedLink.split(/[.,\/ ]/).splice(-2).join('.');
+     
+     let $urlSpan = $("<span>");
+    //  $urlA.attr("href", $fullUrl).text($displayUrl);
+     $urlSpan.html('(<a class="li__url" target="_blank" href=' + $fullUrl + '>' + $displayUrl + '</a>)');
+     $post.append($star).append($titleText).append($author).append($urlSpan);
+     console.log($urlSpan)
      
      $(target).append($post);
 }
+
+function getRootUrl(url) {
+    return url.toString().replace(/^(.*\/\/[^\/?#]*).*$/,"$1");
+}
+
+// var inputText = $('input').eq(0).val();
+//         var inputUrl = $('input').eq(1).val();
+//         var displayUrl = inputUrl.split(/[.,\/ ]/).splice(-2).join('.');
+        
+//         function isUrlValid(url) {
+//             return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
+//         }
+
+//         if(inputText !== '' && isUrlValid(inputUrl)) {
+//             $form.trigger('reset');
+
+//             var newListItem = $('<li>');
+//             var favStar = $('<span>').addClass('far fa-star fa-xs');
+//             var newListItemText = $('<span>').addClass('item-text').text(' ' + inputText + ' ');
+//             // var inputUrlA = $('<a>').addClass('li__url').attr('href', inputUrl).attr('target', '_blank').text(displayUrl);
+//             var inputUrlSpan = $('<span>').addClass('li__link--grey-and-small').html('(<a class="li__url" target="_blank" href=' + inputUrl + '>' + displayUrl + '</a>)');
+            
+//             newListItem.append(favStar);
+//             newListItem.append(newListItemText);
+//             newListItem.append(inputUrlSpan);
+            
+//             $ol.append(newListItem);
+//             $form.slideUp();
+// isSubmissionFormOpen = !isSubmissionFormOpen;
 
 ////////////////////////////////////////////////////////////
 //SIGNUP -- LOGIN FIELD
@@ -155,10 +188,6 @@ $("#submit-login-btn").click(function(){
 ///////////////////////////////////////////////////////////////
 // SUBMIT STORIES
 // Functions and eventlisteners related to submitting form
-function getRootUrl(url) {
-    return url.toString().replace(/^(.*\/\/[^\/?#]*).*$/,"$1");
-}
-
 $form.on("submit", function(){
     let $title = $("#title").val();
     let $story = $("#story-text").val();
