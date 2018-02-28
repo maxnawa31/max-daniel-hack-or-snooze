@@ -8,17 +8,44 @@ var $all = $("#all");
 
 // Rendrer stories in the main screen
 function renderStories(){
-    $.ajax({
-        method: "GET",
-        url: "https://hack-or-snooze.herokuapp.com/stories",
-        
-    }).then(function(val) {
-        arrayOfData = [].concat(val.data);
-        
-        for(var i =0; i<10; i++){
-            createAndAppendItem(arrayOfData[i], "#posts");
-        }
-    })
+    let $arrayOfData=[];
+    let $username = JSON.parse(atob(localStorage.token.split(".")[1])).username;
+    var $objOfIds= {}
+   
+    if($all.text() === "Favorites") {
+        $.ajax({
+            method: "GET",
+            url: "https://hack-or-snooze.herokuapp.com/users/" + $username,
+            headers: {
+                Authorization: "Bearer " + localStorage.token
+            }
+        }).then(function(val){
+            
+            for(var i =0; i<val.data.favorites.length; i++){
+                $objOfIds[val.data.favorites[i].storyId] = 1;
+            }
+           
+            $.ajax({
+                method: "GET",
+                url: "https://hack-or-snooze.herokuapp.com/stories",
+                
+            }).then(function(val) {
+                arrayOfData = [].concat(val.data);
+               
+                for(var i =0; i<10; i++){
+                    
+                    createAndAppendItem(arrayOfData[i], "#posts");
+                    if($objOfIds[$("#posts > li").last().attr("id")]){
+                        $("#posts > li").last().children().eq(0).removeClass("far fa-star");
+                        $("#posts > li").last().children().eq(0).addClass("fas fa-star");
+                    }
+    
+                }
+            })
+        })
+
+    
+    }
 }
 
 // Helper function for rendering stories
@@ -225,21 +252,23 @@ $favorites.on("click", function(){
             }
         })
     } else {
-        $.ajax({
-            method: "GET",
-            url: "https://hack-or-snooze.herokuapp.com/stories",
+        // $.ajax({
+        //     method: "GET",
+        //     url: "https://hack-or-snooze.herokuapp.com/stories",
             
-        }).then(function(val) {
-            arrayOfData = [].concat(val.data);
-            $list.html("");
+        // }).then(function(val) {
+        //     arrayOfData = [].concat(val.data);
+        //     $list.html("");
 
-            for(var i =0; i<10; i++){
-                createAndAppendItem(arrayOfData[i], "#posts");
-            }
+        //     for(var i =0; i<10; i++){
+        //         createAndAppendItem(arrayOfData[i], "#posts");
+        //     }
+        $("#posts").html("");
+        renderStories();
             $("#favorite-stories").fadeOut();
             $("#all").text("Favorites");
             $list.fadeIn();
-        })
+        // })
     }
 });
 
@@ -296,21 +325,12 @@ $("#my-stories-btn").on("click", function(){
             }
         })
     } else {
-        $.ajax({
-            method: "GET",
-            url: "https://hack-or-snooze.herokuapp.com/stories",
-            
-        }).then(function(val) {
-            arrayOfData = [].concat(val.data);
-            $list.html("");
-
-            for(var i =0; i<10; i++){
-                createAndAppendItem(arrayOfData[i], "#posts");
-            }
+        $("#posts").html("");
+        renderStories();
             $("#my-stories").fadeOut();
             $("#my-stories-btn").children().eq(0).text("My stories");
             $list.fadeIn();
-        })
+        
     }
 });
 
@@ -340,3 +360,7 @@ $("#my-stories").on("click", "li", function(event) {
         $elementToDelete.fadeOut();
     })
 });
+
+
+
+
