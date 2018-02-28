@@ -9,10 +9,10 @@ var $all = $("#all");
 // Rendrer stories in the main screen
 function renderStories(){
     let $arrayOfData=[];
-    let $username = JSON.parse(atob(localStorage.token.split(".")[1])).username;
     var $objOfIds= {}
    
-    
+    if(localStorage.token) {
+        let $username = JSON.parse(atob(localStorage.token.split(".")[1])).username;
         $.ajax({
             method: "GET",
             url: "https://hack-or-snooze.herokuapp.com/users/" + $username,
@@ -39,17 +39,30 @@ function renderStories(){
                         $("#posts > li").last().children().eq(0).removeClass("far fa-star");
                         $("#posts > li").last().children().eq(0).addClass("fas fa-star");
                     }
-    
                 }
             })
         })
+    } else {
+        $.ajax({
+            method: "GET",
+            url: "https://hack-or-snooze.herokuapp.com/stories",
+            
+        }).then(function(val) {
+            arrayOfData = [].concat(val.data);
+            
+            for(var i =0; i<10; i++){
+                createAndAppendItem(arrayOfData[i], "#posts");
+            }
+        })
+    }
+        
 
     
     
 }
 
 // Helper function for rendering stories
-renderStories();
+
 
 function createAndAppendItem(obj, target){
     let $post = $("<li>");
@@ -394,3 +407,5 @@ $("#profile-btn").click(function(){
         $("#user-info").fadeToggle();
     })
 })
+
+renderStories();
