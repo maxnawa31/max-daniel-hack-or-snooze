@@ -20,6 +20,7 @@
             <li id ="my-stories-btn"><a href = "#">My stories</a></li>
             <li id ="sign-up-login"><a href = "#">Sign Up/Login</a></li>
             <li id ="profile-btn"><a href = "#">Profile</a></li>
+            <li id ="logout-btn"><a href = "#">Logout</a></li>
         </ul>
     </div>
     <form id="submit-story-form">
@@ -58,7 +59,11 @@
           
          <div id = "signup-login-field">
             <form>
-              <div class="form-group">
+                <div class="text-center">
+                    <button type="submit" class="btn btn-secondary" disabled id="login-toggle-btn">Login</button>
+                    <button type="submit" class="btn btn-secondary" id="signup-toggle-btn">Sign-up</button>
+                  </div>
+              <div id= "name-input-div" class="form-group">
                 <label for="exampleInputEmail1">Name</label>
                 <input type="text" class="form-control" id="name-input" placeholder="Name">
               </div>

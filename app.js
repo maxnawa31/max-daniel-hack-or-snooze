@@ -88,7 +88,7 @@ function createAndAppendItem(obj, target){
      
      let $urlSpan = $("<span>");
     //  $urlA.attr("href", $fullUrl).text($displayUrl);
-     $urlSpan.html('(<a class="li__url" target="_blank" href=' + $fullUrl + '>' + $displayUrl + '</a>)');
+     $urlSpan.html('<a class="li__url" target="_blank" href=' + $fullUrl + '>'+ "(" + $displayUrl + ")"+ '</a>');
      $post.append($star).append($titleText).append($author).append($urlSpan);
      console.log($urlSpan)
      
@@ -99,30 +99,7 @@ function getRootUrl(url) {
     return url.toString().replace(/^(.*\/\/[^\/?#]*).*$/,"$1");
 }
 
-// var inputText = $('input').eq(0).val();
-//         var inputUrl = $('input').eq(1).val();
-//         var displayUrl = inputUrl.split(/[.,\/ ]/).splice(-2).join('.');
-        
-//         function isUrlValid(url) {
-//             return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
-//         }
 
-//         if(inputText !== '' && isUrlValid(inputUrl)) {
-//             $form.trigger('reset');
-
-//             var newListItem = $('<li>');
-//             var favStar = $('<span>').addClass('far fa-star fa-xs');
-//             var newListItemText = $('<span>').addClass('item-text').text(' ' + inputText + ' ');
-//             // var inputUrlA = $('<a>').addClass('li__url').attr('href', inputUrl).attr('target', '_blank').text(displayUrl);
-//             var inputUrlSpan = $('<span>').addClass('li__link--grey-and-small').html('(<a class="li__url" target="_blank" href=' + inputUrl + '>' + displayUrl + '</a>)');
-            
-//             newListItem.append(favStar);
-//             newListItem.append(newListItemText);
-//             newListItem.append(inputUrlSpan);
-            
-//             $ol.append(newListItem);
-//             $form.slideUp();
-// isSubmissionFormOpen = !isSubmissionFormOpen;
 
 ////////////////////////////////////////////////////////////
 //SIGNUP -- LOGIN FIELD
@@ -137,7 +114,37 @@ $("#sign-up-login").on("click", function() {
     $("#screen-cover").fadeToggle();
     $("#signup-login-field").fadeToggle();
 });
+$("#login-toggle-btn").on("click", function(){
+    $("#name-input").parent().hide();
+    $("#submit-signup-btn").hide();
+    $(this).attr("disabled", true);
+    $("#signup-toggle-btn").attr("disabled", false);
+    $("#submit-login-btn").show();
+});
 
+
+$("#signup-toggle-btn").on("click", function(){
+    $("#name-input").parent().fadeIn();
+    $("#submit-signup-btn").show();
+    $(this).attr("disabled", true);
+    $("#login-toggle-btn").attr("disabled", false);
+    $("#submit-login-btn").hide();
+});
+
+$("#logout-btn").on("click", function(){
+    localStorage.clear();
+    $(".flex-container").children().eq(5).children().eq(0).text("Sign Up/Login");
+    $("#profile-btn").hide();
+    $("#favorites").hide();
+    $("#my-stories-btn").hide();
+    $("#submit").hide()
+    $("#posts").fadeIn();
+    $("#favorite-stories").fadeOut();
+    $("#my-stories").fadeOut();
+    $(this).hide();
+
+
+})
 $("#submit-signup-btn").click(function() {
     let $name = $("#name-input").val() || "anonymus";
     let $username = $("#username-input").val();
@@ -176,9 +183,14 @@ $("#submit-login-btn").click(function(){
             }
         }
     }).then(function(val) {
-        token4test123 = val.data.token;
-        localStorage.setItem("token", token4test123);
+        localStorage.setItem("token", val.data.token);
         localStorage.setItem("username", $username);
+        $(".flex-container").children().eq(5).children().eq(0).text("Logged In");
+        $("#profile-btn").show();
+        $("#favorites").show();
+        $("#my-stories-btn").show();
+        $("#submit").show();
+        $("#logout-btn").show();
     })
     $("#signup-login-field form").trigger("reset");
     $("#screen-cover").fadeToggle();
@@ -413,6 +425,10 @@ function userLoginCheck(){
     if(localStorage.token){
         $(".flex-container").children().eq(5).children().eq(0).text("Logged In");
         $("#profile-btn").show();
+        $("#favorites").show();
+        $("#my-stories-btn").show();
+        $("#submit").show();
+        $("#logout-btn").show();
     }
 }
 

@@ -83,3 +83,34 @@ span{
 #profile-btn{
     display:none;
 }
+.li__url{
+    color:grey;
+    padding-left: 0;
+}
+.li__url:hover{
+    color:grey;
+    text-decoration: none;
+}
+
+#favorites, #my-stories-btn, #submit, #submit-signup-btn, #logout-btn{
+    display:none;
+}
+
+#name-input-div{
+    display:none;
+}
+
+
+#user-info span{
+    font-size:30px;
+}
+#user-info{
+    padding: 20px;
+    min-height:10px;
+
+}
+
+#user-info h1{
+    text-align: center;
+}
+
