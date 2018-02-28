@@ -310,23 +310,11 @@ $favorites.on("click", function(){
             }
         })
     } else {
-        // $.ajax({
-        //     method: "GET",
-        //     url: "https://hack-or-snooze.herokuapp.com/stories",
-            
-        // }).then(function(val) {
-        //     arrayOfData = [].concat(val.data);
-        //     $list.html("");
-
-        //     for(var i =0; i<10; i++){
-        //         createAndAppendItem(arrayOfData[i], "#posts");
-        //     }
         $("#posts").html("");
         renderStories();
-            $("#favorite-stories").fadeOut();
-            $("#all").text("Favorites");
-            $list.fadeIn();
-        // })
+        $("#favorite-stories").fadeOut();
+        $("#all").text("Favorites");
+        $list.fadeIn();
     }
 });
 
@@ -404,7 +392,7 @@ $("#my-stories").on("click", ".btn-danger", function(event) {
     $.ajax({
         headers:{
          Authorization:"Bearer " + localStorage.token
-    },
+        },
         method: "DELETE",
         url: "https://hack-or-snooze.herokuapp.com/stories/" + $storyId,
         data: {
@@ -418,16 +406,16 @@ $("#my-stories").on("click", ".btn-danger", function(event) {
     })
 });
 
-// $("#my-stories").on("click", ".btn-warning", function(event) {
-//     let $storyId = $(event.target).parent().attr("id");
-//     let $username = JSON.parse(atob(localStorage.token.split(".")[1])).username;
+$("#my-stories").on("click", ".btn-warning", function(event) {
+    let $storyId = $(event.target).parent().attr("id");
 
-//     $.ajax({
-//         method: "GET",
-//         url: "https://hack-or-snooze.herokuapp.com/stories/" + $storyId,
-//     }).then(function(val) {
-//         console.log(val);
-// })
+    $.ajax({
+        method: "GET",
+        url: "https://hack-or-snooze.herokuapp.com/stories/" + $storyId,
+    }).then(function(val) {
+        console.log(val);
+    });
+});
 
 function userLoginCheck(){
     if(localStorage.token){
