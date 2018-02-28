@@ -54,7 +54,7 @@ span{
     display: none;
 }
 
-#signup-login-field {
+#signup-login-field,#user-info {
     position: fixed;
     top: 30%;
     left: 35%;
@@ -78,5 +78,8 @@ span{
 }
 
 #favorite-stories{
-    display:hidden;
+    display:none;
+}
+#profile-btn{
+    display:none;
 }

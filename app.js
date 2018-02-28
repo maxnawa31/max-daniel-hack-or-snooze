@@ -12,7 +12,7 @@ function renderStories(){
     let $username = JSON.parse(atob(localStorage.token.split(".")[1])).username;
     var $objOfIds= {}
    
-    if($all.text() === "Favorites") {
+    
         $.ajax({
             method: "GET",
             url: "https://hack-or-snooze.herokuapp.com/users/" + $username,
@@ -45,7 +45,7 @@ function renderStories(){
         })
 
     
-    }
+    
 }
 
 // Helper function for rendering stories
@@ -83,7 +83,8 @@ function createAndAppendItem(obj, target){
 // Functions and eventlisteners related to sign-up or login
 $("#screen-cover").on("click", function() {
     $("#screen-cover").fadeToggle();
-    $("#signup-login-field").fadeToggle();
+    $("#signup-login-field").fadeOut();
+    $("#user-info").fadeOut();
 });
 
 $("#sign-up-login").on("click", function() {
@@ -180,6 +181,8 @@ $submit.on("click", function(){
     
 });
 
+
+
 //////////////////////////////////////////////////////
 // FAVORITES
 // Functions and event listener related to favorites
@@ -201,7 +204,8 @@ $list.on("click", "i", function(event){
             method:"DELETE",
             url:"https://hack-or-snooze.herokuapp.com/users/" + $username+ "/favorites/" + $storyId
         }).then(function(val){
-            $(event.target).toggleClass("fas");
+            $(event.target).removeClass("fas fa-star");
+            $(event.target).addClass("far fa-star")
         })
     }else{
         $.ajax({
@@ -216,7 +220,8 @@ $list.on("click", "i", function(event){
             method:"POST",
             url:"https://hack-or-snooze.herokuapp.com/users/" + $username+ "/favorites/" + $storyId
         }).then(function(val){
-            $(event.target).toggleClass("fas");
+            $(event.target).removeClass("far fa-star");
+            $(event.target).addClass("fas fa-star")
         })
     }
 })
@@ -362,5 +367,30 @@ $("#my-stories").on("click", "li", function(event) {
 });
 
 
+function userLoginCheck(){
+    if(localStorage.token){
+        $(".flex-container").children().eq(5).children().eq(0).text("Logged In");
+        $("#profile-btn").show();
+    }
+}
+
+userLoginCheck();
 
 
+$("#profile-btn").click(function(){
+    let $username = JSON.parse(atob(localStorage.token.split(".")[1])).username;
+    $("#screen-cover").fadeToggle();
+   
+
+    $.ajax({
+        method: "GET",
+        url: "https://hack-or-snooze.herokuapp.com/users/" + $username,
+        headers: {
+            Authorization: "Bearer " + localStorage.token
+        }
+    }).then(function(val){
+        $("#user-info-name").text(val.data.name);
+        $("#user-info-username").text($username);
+        $("#user-info").fadeToggle();
+    })
+})
