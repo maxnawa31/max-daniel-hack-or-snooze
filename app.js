@@ -90,7 +90,6 @@ function createAndAppendItem(obj, target){
     //  $urlA.attr("href", $fullUrl).text($displayUrl);
      $urlSpan.html('<a class="li__url" target="_blank" href=' + $fullUrl + '>'+ "(" + $displayUrl + ")"+ '</a>');
      $post.append($star).append($titleText).append($author).append($urlSpan);
-     console.log($urlSpan)
      
      $(target).append($post);
 }
@@ -381,27 +380,26 @@ $("#my-stories-btn").on("click", function(){
             for(var i =0; i<arrayOfData.length; i++){
                 createAndAppendItem($arrayOfData[i], "#my-stories");
                 $("#my-stories > li").last().children().eq(0).remove();
+                let $editBtn = $("<button>").attr("type", "button").addClass("btn btn-warning btn-sm").text("Edit");
+                $("#my-stories > li").last().append($editBtn);
+                let $deleteBtn = $("<button>").attr("type", "button").addClass("btn btn-danger btn-sm").text("Delete");
+                $("#my-stories > li").last().append($deleteBtn);
             }
         })
     } else {
         $("#posts").html("");
         renderStories();
-            $("#my-stories").fadeOut();
-            $("#my-stories-btn").children().eq(0).text("My stories");
-            $list.fadeIn();
+        $("#my-stories").fadeOut();
+        $("#my-stories-btn").children().eq(0).text("My stories");
+        $list.fadeIn();
         
     }
 });
 
-$("#my-stories").on("click", "li", function(event) {
-    if($(event.target).attr("id")) {
-        var $elementToDelete = $(event.target);
-    } else {
-        var $elementToDelete = $(event.target).parent();
-    }
+$("#my-stories").on("click", ".btn-danger", function(event) {
+    let $elementToDelete = $(event.target).parent();
     let $storyId = $elementToDelete.attr("id");
     let $username = JSON.parse(atob(localStorage.token.split(".")[1])).username;
-    console.log($elementToDelete);
 
     $.ajax({
         headers:{
@@ -420,6 +418,16 @@ $("#my-stories").on("click", "li", function(event) {
     })
 });
 
+// $("#my-stories").on("click", ".btn-warning", function(event) {
+//     let $storyId = $(event.target).parent().attr("id");
+//     let $username = JSON.parse(atob(localStorage.token.split(".")[1])).username;
+
+//     $.ajax({
+//         method: "GET",
+//         url: "https://hack-or-snooze.herokuapp.com/stories/" + $storyId,
+//     }).then(function(val) {
+//         console.log(val);
+// })
 
 function userLoginCheck(){
     if(localStorage.token){

@@ -24,70 +24,92 @@
         </ul>
     </div>
     <form id="submit-story-form">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Title</label>
+          <input type="text" class="form-control" id="title" aria-describedby="emailHelp" placeholder="Enter Title">
+          
+        </div>
+
+        <div class="form-group">
+          <label for="exampleInputEmail1">Story</label>
+          <!-- <input type="text" class="form-control" id="story-text" aria-describedby="emailHelp" placeholder="Enter Story"> -->
+          <textarea class= "form-control" id="story-text" rows=“3” placeholder="Enter Story"></textarea>
+        </div>
+        
+
+        <div class="form-group">
+          <label for="exampleInputPassword1">Link</label>
+          <input type="url" class="form-control" id="link" placeholder="Enter Link">
+        </div>
+        
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <ol id = "posts">
+      
+    </ol>
+
+    <ul id = "favorite-stories"></ul>
+
+    <ul id = "my-stories"></ul>
+
+    <div id = "screen-cover"></div>
+    
+    <div id = "signup-login-field">
+      <form>
+          <div class="text-center">
+              <button type="submit" class="btn btn-secondary" disabled id="login-toggle-btn">Login</button>
+              <button type="submit" class="btn btn-secondary" id="signup-toggle-btn">Sign-up</button>
+            </div>
+        <div id= "name-input-div" class="form-group">
+          <label for="exampleInputEmail1">Name</label>
+          <input type="text" class="form-control" id="name-input" placeholder="Name">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputEmail1">User name</label>
+          <input type="text" class="form-control" id="username-input" placeholder="User name" required>
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="password-input" placeholder="Password" required>
+        </div>
+        <div class="d-flex justify-content-around">
+          <button type="submit" class="btn btn-primary" id="submit-login-btn">Login</button>
+          <button type="submit" class="btn btn-primary" id="submit-signup-btn">Sign-up</button>
+        </div>
+        
+      </form>
+    </div>
+
+    <div id = "user-info">
+      <h1>User Info</h1>
+      <h5>Name: <span id ="user-info-name"></span></h5>
+      <h5>Username: <span id = "user-info-username"></span></h5>
+    </div>
+
+    <div id="update-story-field">
+        <form id="update-story-form" class="m-4">
             <div class="form-group">
               <label for="exampleInputEmail1">Title</label>
-              <input type="text" class="form-control" id="title" aria-describedby="emailHelp" placeholder="Enter Title">
+              <input type="text" class="form-control" id="title" aria-describedby="emailHelp" placeholder="Update Title">
               
             </div>
-
+    
             <div class="form-group">
               <label for="exampleInputEmail1">Story</label>
-              <!-- <input type="text" class="form-control" id="story-text" aria-describedby="emailHelp" placeholder="Enter Story"> -->
-              <textarea class= "form-control" id="story-text" rows=“3” placeholder="Enter Story"></textarea>
+              <textarea class= "form-control" id="story-text" rows=“3” placeholder="Update Story"></textarea>
             </div>
             
-
+    
             <div class="form-group">
               <label for="exampleInputPassword1">Link</label>
-              <input type="url" class="form-control" id="link" placeholder="Enter Link">
+              <input type="url" class="form-control" id="link" placeholder="Update Link">
             </div>
             
-           
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </form>
-          <ol id = "posts">
             
-          </ol>
-
-          <ul id = "favorite-stories"></ul>
-
-          <ul id = "my-stories"></ul>
-
-
-          <div id = "screen-cover"></div>
-          
-          
-         <div id = "signup-login-field">
-            <form>
-                <div class="text-center">
-                    <button type="submit" class="btn btn-secondary" disabled id="login-toggle-btn">Login</button>
-                    <button type="submit" class="btn btn-secondary" id="signup-toggle-btn">Sign-up</button>
-                  </div>
-              <div id= "name-input-div" class="form-group">
-                <label for="exampleInputEmail1">Name</label>
-                <input type="text" class="form-control" id="name-input" placeholder="Name">
-              </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">User name</label>
-                <input type="text" class="form-control" id="username-input" placeholder="User name" required>
-              </div>
-              <div class="form-group">
-                <label for="exampleInputPassword1">Password</label>
-                <input type="password" class="form-control" id="password-input" placeholder="Password" required>
-              </div>
-              <div class="d-flex justify-content-around">
-                <button type="submit" class="btn btn-primary" id="submit-login-btn">Login</button>
-                <button type="submit" class="btn btn-primary" id="submit-signup-btn">Sign-up</button>
-              </div>
-              
-            </form>
-          </div>
-
-          <div id = "user-info">
-            <h1>User Info</h1>
-            <h5>Name: <span id ="user-info-name"></span></h5>
-            <h5>Username: <span id = "user-info-username"></span></h5>
-          </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
 
 
 <script src="http://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>       
