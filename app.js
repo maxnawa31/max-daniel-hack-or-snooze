@@ -378,11 +378,11 @@ $favorites.on("click", function(){
             $arrayOfData = [].concat(val.data.favorites);
             $("#favorite-stories").html("");
 
-            $("#favorite-stories").fadeIn();
             $storyForm.hide();
             $listOfStories.hide();
             $("#my-stories").hide();
             $("#my-stories-btn").children().eq(0).text("My stories");
+            $("#favorite-stories").fadeIn();
             
             for(var i =0; i<arrayOfData.length; i++){
                 createAndAppendItem($arrayOfData[i], "#favorite-stories");
@@ -396,7 +396,7 @@ $favorites.on("click", function(){
         $lastFavStories = [];
         $("#posts").html("");
         renderStories();
-        $("#favorite-stories").fadeOut();
+        $("#favorite-stories").hide();
         $("#all").text("Favorites");
         $list.fadeIn();
     }
@@ -436,7 +436,7 @@ $("#my-stories-btn").on("click", function(){
         $lastFavStories = [];
         $("#posts").html("");
         renderStories();
-        $("#my-stories").fadeOut();
+        $("#my-stories").hide();
         $("#my-stories-btn").children().eq(0).text("My stories");
         $list.fadeIn();
         
