@@ -128,3 +128,7 @@ span{
     display: none;
 }
 
+#pirate-icon {
+    border: solid .5px grey;
+    border-radius: 2px;
+}

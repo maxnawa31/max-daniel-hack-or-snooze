@@ -7,6 +7,8 @@ var $favorites = $("#favorites");
 var $submit = $("#submit");
 var $all = $("#all");
 var $lastFiftyStories = [];
+var $scrollCounter = 10;
+var $lastFavStories = [];
 
 userLoginCheck();
 renderStories();
@@ -30,7 +32,9 @@ function renderStories(){
             for(var i =0; i<val.data.favorites.length; i++){
                 $objOfIds[val.data.favorites[i].storyId] = 1;
             }
-           
+            
+            $lastFavStories = {...$objOfIds};           
+            
             $.ajax({
                 method: "GET",
                 url: "https://hack-or-snooze.herokuapp.com/stories",
@@ -104,9 +108,52 @@ function getRootUrl(url) {
 
 ////////////////////////////////////////////////////////////
 // INFINITE SCROLL
-$("body").on("scroll", function() {
-    console.log("you scrolled!")
+$(document).keypress(function(event) {
+    if(event.which === 32 || event.which === 13) {
+        if($(".flex-container").children().eq(3).children().eq(0).text() === "Favorites" && $(".flex-container").children().eq(4).children().eq(0).text() === "My stories" && $("#submit-story-form").css("display") === "none" && $("#screen-cover").css("display") === "none") {
+            infiniteScroll();
+        }
+    } 
 });
+
+function infiniteScroll() {
+    if($scrollCounter < $lastFiftyStories.length) {
+        for(var i = $scrollCounter; i < $scrollCounter + 10; i++){    
+            if($lastFiftyStories[i]) {
+                createAndAppendItem(arrayOfData[i], "#posts");
+                if($lastFavStories[$("#posts > li").last().attr("id")]){
+                    $("#posts > li").last().children().eq(0).removeClass("far fa-star");
+                    $("#posts > li").last().children().eq(0).addClass("fas fa-star");
+                }
+            $("#posts > li").last().css("display", "none");
+            $("#posts > li").last().fadeIn();
+            } else {
+                $scrollCounter = NaN;
+            }
+        }
+        $scrollCounter += 10;
+    } else if($scrollCounter === 50) {
+        $.ajax({
+            method: "GET",
+            url: "https://hack-or-snooze.herokuapp.com/stories?skip=" + $scrollCounter,
+            
+        }).then(function(val) {
+            arrayOfData = [].concat(val.data);
+            $lastFiftyStories = [].concat(val.data);
+            
+            for(var i =0; i<10; i++){
+                createAndAppendItem(arrayOfData[i], "#posts");
+                    if($lastFavStories[$("#posts > li").last().attr("id")]){
+                        $("#posts > li").last().children().eq(0).removeClass("far fa-star");
+                        $("#posts > li").last().children().eq(0).addClass("fas fa-star");
+                    }
+                $("#posts > li").last().css("display", "none");
+                $("#posts > li").last().fadeIn();
+            }
+            $scrollCounter = 10;
+        });
+    }   
+}
 
 ////////////////////////////////////////////////////////////
 //SIGNUP -- LOGIN FIELD
@@ -149,7 +196,7 @@ $("#logout-btn").on("click", function(){
     $("#favorite-stories").fadeOut();
     $("#my-stories").fadeOut();
     $(this).hide();
-
+    $lastFavStories = [];
 
 })
 $("#submit-signup-btn").click(function() {
@@ -209,7 +256,8 @@ $("#submit-login-btn").click(function(){
 ///////////////////////////////////////////////////////////////
 // SUBMIT STORIES
 // Functions and eventlisteners related to submitting form
-$form.on("submit", function(){
+$form.on("submit", function(event){
+    event.preventDefault();
     let $title = $("#title").val();
     // let $story = $("#story-text").val();
     let $link = $("#link").val();
@@ -235,7 +283,8 @@ $form.on("submit", function(){
         }).then(function(val) {
             $list.html("");
             renderStories();
-        
+            $form.slideUp();
+            $form.trigger("reset");
         })
     })
 })
@@ -246,8 +295,6 @@ $submit.on("click", function(){
     }
     
 });
-
-
 
 //////////////////////////////////////////////////////
 // FAVORITES
@@ -323,6 +370,9 @@ $favorites.on("click", function(){
             }
         })
     } else {
+        $lastFiftyStories = [];
+        $scrollCounter = 10;
+        $lastFavStories = [];
         $("#posts").html("");
         renderStories();
         $("#favorite-stories").fadeOut();
@@ -360,6 +410,9 @@ $("#my-stories-btn").on("click", function(){
     if($("#my-stories-btn").text() === "My stories") {
         renderMyStories();
     } else {
+        $lastFiftyStories = [];
+        $scrollCounter = 10;
+        $lastFavStories = [];
         $("#posts").html("");
         renderStories();
         $("#my-stories").fadeOut();
