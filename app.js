@@ -197,13 +197,14 @@ $("#logout-btn").on("click", function(){
     $("#my-stories").fadeOut();
     $(this).hide();
     $lastFavStories = [];
-
+    renderStories();
 })
-$("#submit-signup-btn").click(function() {
+$("#submit-signup-btn").click(function(event) {
     let $name = $("#name-input").val() || "anonymus";
     let $username = $("#username-input").val();
     let $password = $("#password-input").val();
     
+    event.preventDefault();
     
     $.ajax({
         method: "POST",
@@ -216,16 +217,38 @@ $("#submit-signup-btn").click(function() {
             }
         }
     }).then(function(val) {
-        console.log(val);
-    })
-    $("#signup-login-field form").trigger("reset");
-    $("#screen-cover").fadeOut();
-    $("#signup-login-field").fadeOut();
+        $.ajax({
+            method: "POST",
+            url: "https://hack-or-snooze.herokuapp.com/auth",
+            data: {
+                data: {
+                    username: $username,
+                    password: $password,  
+                }
+            }
+        }).then(function(val) {
+            localStorage.setItem("token", val.data.token);
+            localStorage.setItem("username", $username);
+            $(".flex-container").children().eq(3).children().eq(0).text("Favorites");
+            $(".flex-container").children().eq(4).children().eq(0).text("My stories");
+            $(".flex-container").children().eq(5).children().eq(0).text("Logged In");
+            $("#profile-btn").show();
+            $("#favorites").show();
+            $("#my-stories-btn").show();
+            $("#submit").show();
+            $("#logout-btn").show();
+            $("#signup-login-field form").trigger("reset");
+            $("#screen-cover").fadeToggle();
+            $("#signup-login-field").fadeToggle();
+        })
+    });
 });
 
-$("#submit-login-btn").click(function(){
+$("#submit-login-btn").click(function(event){
     let $username = $("#username-input").val();
     let $password = $("#password-input").val();
+
+    event.preventDefault();
     
     $.ajax({
         method: "POST",
@@ -247,10 +270,10 @@ $("#submit-login-btn").click(function(){
         $("#my-stories-btn").show();
         $("#submit").show();
         $("#logout-btn").show();
+        $("#signup-login-field form").trigger("reset");
+        $("#screen-cover").fadeToggle();
+        $("#signup-login-field").fadeToggle();
     })
-    $("#signup-login-field form").trigger("reset");
-    $("#screen-cover").fadeToggle();
-    $("#signup-login-field").fadeToggle();
 })
 
 ///////////////////////////////////////////////////////////////
@@ -259,12 +282,11 @@ $("#submit-login-btn").click(function(){
 $form.on("submit", function(event){
     event.preventDefault();
     let $title = $("#title").val();
-    // let $story = $("#story-text").val();
     let $link = $("#link").val();
     let $username = JSON.parse(atob(localStorage.token.split(".")[1])).username;
     
-    getAuthorName().then(function(data) {
-        let $author = data.data.name;
+    getAuthorName().then(function(val) {
+        let $author = val.data.name;
         $.ajax({
             headers:{
              Authorization:"Bearer " + localStorage.token
@@ -276,8 +298,7 @@ $form.on("submit", function(event){
                     title: $title,
                     author: $author,
                     url: $link,
-                    username: $username,
-                    
+                    username: $username,   
                 }
             }
         }).then(function(val) {
@@ -496,9 +517,11 @@ $("#my-stories").on("click", ".btn-warning", function(event) {
     $("#update-story-field").fadeIn();
 });
 
-$("#update-story-btn").on("click", function() {
+$("#update-story-btn").on("click", function(event) {
     let $updatedTitle = $("#update-title").val();
     let $updatedUrl = $("#update-link").val();
+    
+    event.preventDefault();
 
     $.ajax({
         headers:{
@@ -549,11 +572,13 @@ $("#profile-btn").click(function(){
 /////////////////////////////////////////////////////////////////
 // OTHER STUFF
 function getAuthorName() {
+    let $username = JSON.parse(atob(localStorage.token.split(".")[1])).username;
+    
     return $.ajax({
         method: "GET",
-        url: "https://hack-or-snooze.herokuapp.com/users/test123",
+        url: "https://hack-or-snooze.herokuapp.com/users/" + $username,
         headers: {
-            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QxMjMiLCJpYXQiOjE1MTk3NTk4NTR9.XKcHy-O5wxrjkZBbEubETDXX8g2x1mSO67J16Od9MRA",
+            Authorization: "Bearer " + localStorage.token,
         }
     })
 }
