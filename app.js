@@ -8,6 +8,7 @@ var $submit = $("#submit");
 var $all = $("#all");
 var $lastFiftyStories = [];
 var $scrollCounter = 10;
+var $batchCounter = 1;
 var $lastFavStories = [];
 
 userLoginCheck();
@@ -61,6 +62,8 @@ function renderStories(){
         }).then(function(val) {
             arrayOfData = [].concat(val.data);
             $lastFiftyStories = [].concat(val.data);
+            $scrollCounter = 10;
+            $batchCounter = 1;
             
             for(var i =0; i<10; i++){
                 createAndAppendItem(arrayOfData[i], "#posts");
@@ -70,8 +73,6 @@ function renderStories(){
 }
 
 // Helper function for rendering stories
-
-
 function createAndAppendItem(obj, target){
     let $post = $("<li>");
      $post.attr("id", obj.storyId);
@@ -116,6 +117,10 @@ $(document).keypress(function(event) {
     } 
 });
 
+$(".btn-outline-secondary").on("click", function() {
+    infiniteScroll();
+});
+
 function infiniteScroll() {
     if($scrollCounter < $lastFiftyStories.length) {
         for(var i = $scrollCounter; i < $scrollCounter + 10; i++){    
@@ -135,22 +140,29 @@ function infiniteScroll() {
     } else if($scrollCounter === 50) {
         $.ajax({
             method: "GET",
-            url: "https://hack-or-snooze.herokuapp.com/stories?skip=" + $scrollCounter,
+            url: "https://hack-or-snooze.herokuapp.com/stories?skip=" + $scrollCounter * $batchCounter,
             
         }).then(function(val) {
             arrayOfData = [].concat(val.data);
             $lastFiftyStories = [].concat(val.data);
-            
+            $scrollCounter = 10;
+            $batchCounter++;
+
             for(var i =0; i<10; i++){
                 createAndAppendItem(arrayOfData[i], "#posts");
+                if($lastFiftyStories[i]) {
+                    createAndAppendItem(arrayOfData[i], "#posts");
                     if($lastFavStories[$("#posts > li").last().attr("id")]){
                         $("#posts > li").last().children().eq(0).removeClass("far fa-star");
                         $("#posts > li").last().children().eq(0).addClass("fas fa-star");
                     }
                 $("#posts > li").last().css("display", "none");
                 $("#posts > li").last().fadeIn();
+                } else {
+                    $scrollCounter = NaN;
+                    $(".btn-outline-secondary").attr("checked", true);
+                }
             }
-            $scrollCounter = 10;
         });
     }   
 }
@@ -321,7 +333,6 @@ $submit.on("click", function(){
 // FAVORITES
 // Functions and event listener related to favorites
 $list.on("click", "i", function(event){
-    
     let $storyId = $(event.target).parent().attr("id");
     let $username = JSON.parse(atob(localStorage.token.split(".")[1])).username;
 
@@ -377,6 +388,7 @@ $favorites.on("click", function(){
             $("#all").text("All");
             $arrayOfData = [].concat(val.data.favorites);
             $("#favorite-stories").html("");
+            $(".btn-outline-secondary").fadeOut();
 
             $storyForm.hide();
             $listOfStories.hide();
@@ -399,6 +411,7 @@ $favorites.on("click", function(){
         $("#favorite-stories").hide();
         $("#all").text("Favorites");
         $list.fadeIn();
+        $(".btn-outline-secondary").fadeIn();
     }
 });
 
@@ -430,6 +443,7 @@ var $tempStoryId;
 $("#my-stories-btn").on("click", function(){
     if($("#my-stories-btn").text() === "My stories") {
         renderMyStories();
+        $(".btn-outline-secondary").fadeOut();
     } else {
         $lastFiftyStories = [];
         $scrollCounter = 10;
@@ -439,7 +453,7 @@ $("#my-stories-btn").on("click", function(){
         $("#my-stories").hide();
         $("#my-stories-btn").children().eq(0).text("My stories");
         $list.fadeIn();
-        
+        $(".btn-outline-secondary").fadeIn();
     }
 });
 
