@@ -25,26 +25,25 @@
     </div>
     <form id="submit-story-form">
         <div class="form-group">
-          <label for="exampleInputEmail1">Title</label>
+          <label for="title">Title</label>
           <input type="text" class="form-control" id="title" aria-describedby="emailHelp" placeholder="Enter Title">
-          
         </div>
 
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label for="exampleInputEmail1">Story</label>
-          <!-- <input type="text" class="form-control" id="story-text" aria-describedby="emailHelp" placeholder="Enter Story"> -->
           <textarea class= "form-control" id="story-text" rows=“3” placeholder="Enter Story"></textarea>
-        </div>
+        </div> -->
         
 
         <div class="form-group">
-          <label for="exampleInputPassword1">Link</label>
+          <label for="link">Link</label>
           <input type="url" class="form-control" id="link" placeholder="Enter Link">
         </div>
         
         
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+
     <ol id = "posts">
       
     </ol>
@@ -90,24 +89,23 @@
     <div id="update-story-field">
         <form id="update-story-form" class="m-4">
             <div class="form-group">
-              <label for="exampleInputEmail1">Title</label>
-              <input type="text" class="form-control" id="title" aria-describedby="emailHelp" placeholder="Update Title">
-              
+              <label for="title">Title</label>
+              <input type="text" class="form-control" id="update-title" aria-describedby="emailHelp" placeholder="Update Title"> 
             </div>
     
-            <div class="form-group">
+            <!-- <div class="form-group">
               <label for="exampleInputEmail1">Story</label>
               <textarea class= "form-control" id="story-text" rows=“3” placeholder="Update Story"></textarea>
-            </div>
+            </div> -->
             
     
             <div class="form-group">
-              <label for="exampleInputPassword1">Link</label>
-              <input type="url" class="form-control" id="link" placeholder="Update Link">
+              <label for="update-link">Link</label>
+              <input type="url" class="form-control" id="update-link" placeholder="Update Link">
             </div>
             
             
-            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="submit" class="btn btn-primary" id="update-story-btn">Update</button>
         </form>
     </div>
 
