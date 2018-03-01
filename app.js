@@ -204,10 +204,11 @@ $("#logout-btn").on("click", function(){
     $("#favorites").hide();
     $("#my-stories-btn").hide();
     $("#submit").hide()
-    $("#posts").fadeIn();
     $("#favorite-stories").fadeOut();
     $("#my-stories").fadeOut();
+    $("#posts").fadeIn();
     $(this).hide();
+    $("#posts").html("");
     $lastFavStories = [];
     renderStories();
 })
