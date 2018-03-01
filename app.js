@@ -1,12 +1,18 @@
-// Variables
+/////////////////////////////////////////////////////////
+// Variables and startup
 var arrayOfData = [];
 var $list = $("#posts")
 var $form = $("#submit-story-form");
 var $favorites = $("#favorites");
 var $submit = $("#submit");
 var $all = $("#all");
+var $lastFiftyStories = [];
 
-// Rendrer stories in the main screen
+userLoginCheck();
+renderStories();
+
+//////////////////////////////////////////////////////////
+// Render stories in the main screen
 function renderStories(){
     let $arrayOfData=[];
     var $objOfIds= {}
@@ -31,6 +37,7 @@ function renderStories(){
                 
             }).then(function(val) {
                 arrayOfData = [].concat(val.data);
+                $lastFiftyStories = [].concat(val.data);
                
                 for(var i =0; i<10; i++){
                     
@@ -49,16 +56,13 @@ function renderStories(){
             
         }).then(function(val) {
             arrayOfData = [].concat(val.data);
+            $lastFiftyStories = [].concat(val.data);
             
             for(var i =0; i<10; i++){
                 createAndAppendItem(arrayOfData[i], "#posts");
             }
         })
-    }
-        
-
-    
-    
+    } 
 }
 
 // Helper function for rendering stories
@@ -98,7 +102,11 @@ function getRootUrl(url) {
     return url.toString().replace(/^(.*\/\/[^\/?#]*).*$/,"$1");
 }
 
-
+////////////////////////////////////////////////////////////
+// INFINITE SCROLL
+$("body").on("scroll", function() {
+    console.log("you scrolled!")
+});
 
 ////////////////////////////////////////////////////////////
 //SIGNUP -- LOGIN FIELD
@@ -164,8 +172,8 @@ $("#submit-signup-btn").click(function() {
         console.log(val);
     })
     $("#signup-login-field form").trigger("reset");
-    $("#screen-cover").fadeToggle();
-    $("#signup-login-field").fadeToggle();
+    $("#screen-cover").fadeOut();
+    $("#signup-login-field").fadeOut();
 });
 
 $("#submit-login-btn").click(function(){
@@ -184,6 +192,8 @@ $("#submit-login-btn").click(function(){
     }).then(function(val) {
         localStorage.setItem("token", val.data.token);
         localStorage.setItem("username", $username);
+        $(".flex-container").children().eq(3).children().eq(0).text("Favorites");
+        $(".flex-container").children().eq(4).children().eq(0).text("My stories");
         $(".flex-container").children().eq(5).children().eq(0).text("Logged In");
         $("#profile-btn").show();
         $("#favorites").show();
@@ -301,9 +311,9 @@ $favorites.on("click", function(){
             $("#favorite-stories").html("");
 
             $("#favorite-stories").fadeIn();
-            $storyForm.fadeOut();
-            $listOfStories.fadeOut();
-            $("#my-stories").fadeOut();
+            $storyForm.hide();
+            $listOfStories.hide();
+            $("#my-stories").hide();
             $("#my-stories-btn").children().eq(0).text("My stories");
             
             for(var i =0; i<arrayOfData.length; i++){
@@ -379,9 +389,9 @@ function renderMyStories() {
         $("#my-stories").html("");
 
         $("#my-stories").fadeIn();
-        $storyForm.fadeOut();
-        $listOfStories.fadeOut();
-        $favStories.fadeOut();
+        $storyForm.hide();
+        $listOfStories.hide();
+        $favStories.hide();
         $("#all").text("Favorites");
         $("#update-story-field").fadeOut();
         $("#screen-cover").fadeOut();
@@ -465,8 +475,6 @@ function userLoginCheck(){
     }
 }
 
-userLoginCheck();
-
 $("#profile-btn").click(function(){
     let $username = JSON.parse(atob(localStorage.token.split(".")[1])).username;
     $("#screen-cover").fadeToggle();
@@ -483,10 +491,7 @@ $("#profile-btn").click(function(){
         $("#user-info-username").text($username);
         $("#user-info").fadeToggle();
     })
-})
-
-renderStories();
-
+});
 
 /////////////////////////////////////////////////////////////////
 // OTHER STUFF
